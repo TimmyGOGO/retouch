@@ -109,6 +109,7 @@ namespace retouch
             this.btnPerformRet.TabIndex = 6;
             this.btnPerformRet.Text = "Perform retouching(Gray)";
             this.btnPerformRet.UseVisualStyleBackColor = true;
+            this.btnPerformRet.Click += new System.EventHandler(this.btnPerformRet_Click);
             // 
             // btnShowDefects
             // 

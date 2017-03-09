@@ -223,13 +223,24 @@ namespace retouch
             {
                 for (int i = 0; i < width - 3; i++)
                 {
-                    int r = 0;
+                    //найдем значения откликов по 5-ти маскам:
+                    int[] r = new int[5]{0,0,0,0,0};
                     for (int m = 0; m < 3; m++)
                     {
                         for (int l = 0; l < 3; l++)
-                            r += pointMask[m, l] * (int) currBit.GetPixel(i + m, j + l).R;
+                        {
+                            r[0] += pointMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            /*  не работает:
+                            r[1] += lineMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            r[2] += lineMask45[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            r[3] += lineMask90[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            r[4] += lineMask135[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            */
+                        }
                     }
-                    if (r >= p)
+
+                    //сравним максимальное значение отклика с порогом:
+                    if (r.Max() >= p)
                     {
                         caughtDefects[i + 1, j + 1] = byte.MaxValue;
                     }
@@ -252,10 +263,44 @@ namespace retouch
                     if (caughtDefects[x, y] == byte.MaxValue)
                     {
                         g.FillRectangle(Brushes.Red, new Rectangle(x, y, 1, 1));
-                        pictureBox1.Refresh();
                     }
                 }
             }
+            pictureBox1.Refresh();
+        }
+
+        //ретуширование черно-белой фотографии:
+        private void btnPerformRet_Click(object sender, EventArgs e)
+        {
+            int width = pictureBox1.Width;
+            int height = pictureBox1.Height;
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
+                {
+                    if (caughtDefects[x, y] == byte.MaxValue)
+                    {
+                        //восстановление битого пикселя:
+                        int nonDefPixAmount = 0;
+                        int summ_component = 0;
+                        for (int m = -1; m <= 1; m++)
+                        {
+                            for (int l = -1; l <= 1; l++){
+                                if (m != 0 || l != 0){
+                                    if (caughtDefects[x+m, y+l] != byte.MaxValue)
+                                    {
+                                        nonDefPixAmount++;
+                                        summ_component += (int) currBit.GetPixel(x + m, y + l).R;
+                                    }
+                                }
+                            }
+                        }
+                        int cP = summ_component / nonDefPixAmount;
+                        currBit.SetPixel(x, y, Color.FromArgb(cP, cP, cP));
+                    }
+                }
+            }
+            pictureBox1.Refresh();
         }
 
         
