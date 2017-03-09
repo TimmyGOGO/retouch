@@ -49,6 +49,8 @@ namespace retouch
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnRestore = new System.Windows.Forms.Button();
             this.chckBxGrayScale = new System.Windows.Forms.CheckBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.btnMakeGray = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -116,7 +118,7 @@ namespace retouch
             // 
             // textBoxThreshold
             // 
-            this.textBoxThreshold.Location = new System.Drawing.Point(418, 284);
+            this.textBoxThreshold.Location = new System.Drawing.Point(419, 267);
             this.textBoxThreshold.Name = "textBoxThreshold";
             this.textBoxThreshold.Size = new System.Drawing.Size(199, 20);
             this.textBoxThreshold.TabIndex = 7;
@@ -124,7 +126,7 @@ namespace retouch
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(418, 261);
+            this.label1.Location = new System.Drawing.Point(418, 251);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 8;
@@ -140,9 +142,9 @@ namespace retouch
             // 
             // btnFindWrong
             // 
-            this.btnFindWrong.Location = new System.Drawing.Point(418, 311);
+            this.btnFindWrong.Location = new System.Drawing.Point(418, 293);
             this.btnFindWrong.Name = "btnFindWrong";
-            this.btnFindWrong.Size = new System.Drawing.Size(200, 48);
+            this.btnFindWrong.Size = new System.Drawing.Size(200, 34);
             this.btnFindWrong.TabIndex = 9;
             this.btnFindWrong.Text = "Find wrong pixels";
             this.btnFindWrong.UseVisualStyleBackColor = true;
@@ -214,9 +216,28 @@ namespace retouch
             this.chckBxGrayScale.UseVisualStyleBackColor = true;
             this.chckBxGrayScale.CheckedChanged += new System.EventHandler(this.chckBxGrayScale_CheckedChanged);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(418, 333);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(200, 26);
+            this.progressBar1.TabIndex = 15;
+            // 
+            // btnMakeGray
+            // 
+            this.btnMakeGray.Location = new System.Drawing.Point(144, 418);
+            this.btnMakeGray.Name = "btnMakeGray";
+            this.btnMakeGray.Size = new System.Drawing.Size(94, 47);
+            this.btnMakeGray.TabIndex = 16;
+            this.btnMakeGray.Text = "Make gray";
+            this.btnMakeGray.UseVisualStyleBackColor = true;
+            this.btnMakeGray.Click += new System.EventHandler(this.btnMakeGray_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1037, 471);
+            this.Controls.Add(this.btnMakeGray);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.chckBxGrayScale);
             this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.groupBox1);
@@ -260,6 +281,8 @@ namespace retouch
         private GroupBox groupBox1;
         private Button btnRestore;
         private CheckBox chckBxGrayScale;
+        private ProgressBar progressBar1;
+        private Button btnMakeGray;
     }
 }
 

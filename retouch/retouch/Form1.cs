@@ -103,6 +103,12 @@ namespace retouch
                 {-1,2,-1},
                 {-1,-1,2}
             };
+
+            //для отображения прогресса:
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -209,7 +215,10 @@ namespace retouch
                 MessageBox.Show(ex.Message, "Error of the threshold value!");
                 return;
             }
-            
+
+            //для отображения прогресса:
+            progressBar1.Value = 0;
+
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
             
@@ -247,8 +256,15 @@ namespace retouch
                         caughtDefects[i + 1, j + 1] = true;
                     }
                 }
+
+                //для отображения прогресса: (при условии что height = 400!)
+                if ((j + 1) % 4 == 0)
+                {
+                    progressBar1.Value += 1;
+                }
             }
 
+            progressBar1.Value += 1;
             //оповещение:
             MessageBox.Show("Defective pixels have been found!", "All is right", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -274,6 +290,7 @@ namespace retouch
         //ретуширование черно-белой фотографии:
         private void btnPerformRet_Click(object sender, EventArgs e)
         {
+
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
             for (int y = 0; y < height; ++y)
@@ -287,12 +304,14 @@ namespace retouch
                         int summ_component = 0;
                         for (int m = -1; m <= 1; m++)
                         {
-                            for (int l = -1; l <= 1; l++){
-                                if (m != 0 || l != 0){
-                                    if (caughtDefects[x+m, y+l] == false)
+                            for (int l = -1; l <= 1; l++)
+                            {
+                                if (m != 0 || l != 0)
+                                {
+                                    if (caughtDefects[x + m, y + l] == false)
                                     {
                                         nonDefPixAmount++;
-                                        summ_component += (int) currBit.GetPixel(x + m, y + l).R;
+                                        summ_component += (int)currBit.GetPixel(x + m, y + l).R;
                                     }
                                 }
                             }
@@ -301,6 +320,7 @@ namespace retouch
                         currBit.SetPixel(x, y, Color.FromArgb(cP, cP, cP));
                     }
                 }
+
             }
             pictureBox1.Refresh();
         }
@@ -326,6 +346,13 @@ namespace retouch
                 pictureBox1.Image = (Image)currBit;
                 pictureBox1.Refresh();
             }
+        }
+
+        private void btnMakeGray_Click(object sender, EventArgs e)
+        {
+            ImageProc.ToGrayScale(ref currBit);
+            pictureBox1.Image = (Image)currBit;
+            chckBxGrayScale.Checked = true;
         }
 
         
