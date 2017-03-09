@@ -25,7 +25,7 @@ namespace retouch
         
         //сохранение дефектов:
         private Bitmap defects;
-        private byte[,] caughtDefects;
+        private bool[,] caughtDefects;
         
         //режим использования окна (изображение слева)
         private int mode;
@@ -61,8 +61,8 @@ namespace retouch
             
             //сохранение дефектов:
             defects = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
-            caughtDefects = new byte[pictureBox1.Width, pictureBox1.Height];
-            clearArray(ref caughtDefects, pictureBox1.Width, pictureBox1.Height);
+            caughtDefects = new bool[pictureBox1.Width, pictureBox1.Height];
+            Array.Clear(caughtDefects, 0, caughtDefects.Length);
             
             //инициализация масок:
             pointMask = new int[3, 3]
@@ -95,16 +95,6 @@ namespace retouch
                 {-1,2,-1},
                 {-1,-1,2}
             };
-        }
-    
-        //очистить массив байт:
-        private void clearArray(ref byte[,] a, int w, int h)
-        {
-            for (int i = 0; i < w; i++)
-            {
-                for (int j = 0; j < h; j++)
-                    a[i,j] = (byte) 0;
-            }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -216,7 +206,7 @@ namespace retouch
             int height = pictureBox1.Height;
             
             //очистка ранее найденных дефектов:
-            clearArray(ref caughtDefects, pictureBox1.Width, pictureBox1.Height);
+            Array.Clear(caughtDefects, 0, caughtDefects.Length);
             
             //основной цикл:
             for (int j = 0; j < height - 3; j++)
@@ -242,7 +232,7 @@ namespace retouch
                     //сравним максимальное значение отклика с порогом:
                     if (r.Max() >= p)
                     {
-                        caughtDefects[i + 1, j + 1] = byte.MaxValue;
+                        caughtDefects[i + 1, j + 1] = true;
                     }
                 }
             }
@@ -260,7 +250,7 @@ namespace retouch
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    if (caughtDefects[x, y] == byte.MaxValue)
+                    if (caughtDefects[x, y] == true)
                     {
                         g.FillRectangle(Brushes.Red, new Rectangle(x, y, 1, 1));
                     }
@@ -278,7 +268,7 @@ namespace retouch
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    if (caughtDefects[x, y] == byte.MaxValue)
+                    if (caughtDefects[x, y] == true)
                     {
                         //восстановление битого пикселя:
                         int nonDefPixAmount = 0;
@@ -287,7 +277,7 @@ namespace retouch
                         {
                             for (int l = -1; l <= 1; l++){
                                 if (m != 0 || l != 0){
-                                    if (caughtDefects[x+m, y+l] != byte.MaxValue)
+                                    if (caughtDefects[x+m, y+l] == false)
                                     {
                                         nonDefPixAmount++;
                                         summ_component += (int) currBit.GetPixel(x + m, y + l).R;
