@@ -59,7 +59,7 @@ namespace retouch
             
             //цвет для дефектов красный (по умолчанию):
             defBrush = Brushes.Red;
-            defPen = new Pen(defBrush, 1f);
+            defPen = new Pen(Color.Red, 1f);
 
             //режим:
             mode = STAGE_0;
@@ -228,7 +228,8 @@ namespace retouch
                         for (int l = 0; l < 3; l++)
                         {
                             r[0] += pointMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            /*  не работает:
+                            //  не работает:
+                            /*
                             r[1] += lineMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
                             r[2] += lineMask45[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
                             r[3] += lineMask90[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
@@ -236,9 +237,11 @@ namespace retouch
                             */
                         }
                     }
+                    //взятие значений по модулю:
+                    for (int m = 0; m < 5; m++) { r[m] = Math.Abs(r[m]); }
 
                     //сравним максимальное значение отклика с порогом:
-                    if (Math.Abs(r.Max()) >= p)
+                    if (r.Max() >= p)
                     {
                         caughtDefects[i + 1, j + 1] = true;
                     }
