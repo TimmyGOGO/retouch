@@ -22,6 +22,10 @@ namespace retouch
         private Bitmap currBit;
         private Graphics g;
         private Graphics g1;
+
+        //средства для окрашивания дефектов:
+        private Brush defBrush;
+        private Pen defPen;
         
         //сохранение дефектов:
         private Bitmap defects;
@@ -53,6 +57,10 @@ namespace retouch
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             
+            //цвет для дефектов красный (по умолчанию):
+            defBrush = Brushes.Red;
+            defPen = new Pen(defBrush, 1f);
+
             //режим:
             mode = STAGE_0;
             
@@ -143,8 +151,8 @@ namespace retouch
             if (mode == STAGE_1)
             {
                 //рисуем точку, заполняя прямоугольник 1х1:
-                g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-                g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
+                g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
                 pictureBox1.Refresh();
             }
             else if (mode == STAGE_2)
@@ -153,14 +161,14 @@ namespace retouch
                 {
                     //фиксируем начало линии:
                     lineStart = new Point(e.X, e.Y);
-                    g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-                    g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                    g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
+                    g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
                     pictureBox1.Refresh();
                 }
                 else //если начало есть, то фиксируем конец линии:
                 {
-                    g.DrawLine(new Pen(Color.Pink, 1f), lineStart, e.Location);
-                    g1.DrawLine(new Pen(Color.Pink, 1f), lineStart, e.Location);
+                    g.DrawLine(defPen, lineStart, e.Location);
+                    g1.DrawLine(defPen, lineStart, e.Location);
                     
                     //заполняем точку начала значением (-1,-1) - нет фиксированной точки
                     lineStart = new Point(-1, -1);
@@ -230,7 +238,7 @@ namespace retouch
                     }
 
                     //сравним максимальное значение отклика с порогом:
-                    if (r.Max() >= p)
+                    if (Math.Abs(r.Max()) >= p)
                     {
                         caughtDefects[i + 1, j + 1] = true;
                     }
@@ -252,7 +260,7 @@ namespace retouch
                 {
                     if (caughtDefects[x, y] == true)
                     {
-                        g.FillRectangle(Brushes.Red, new Rectangle(x, y, 1, 1));
+                        g.FillRectangle(defBrush, new Rectangle(x, y, 1, 1));
                     }
                 }
             }

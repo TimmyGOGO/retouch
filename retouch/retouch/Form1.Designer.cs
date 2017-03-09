@@ -32,6 +32,7 @@ namespace retouch
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnGS = new System.Windows.Forms.Button();
@@ -73,7 +74,8 @@ namespace retouch
             // 
             // btnGS
             // 
-            this.btnGS.Location = new System.Drawing.Point(418, 45);
+            this.btnGS.Image = ((System.Drawing.Image)(resources.GetObject("btnGS.Image")));
+            this.btnGS.Location = new System.Drawing.Point(418, 191);
             this.btnGS.Name = "btnGS";
             this.btnGS.Size = new System.Drawing.Size(199, 27);
             this.btnGS.TabIndex = 3;
@@ -83,9 +85,9 @@ namespace retouch
             // 
             // btnMDefects
             // 
-            this.btnMDefects.Location = new System.Drawing.Point(6, 65);
+            this.btnMDefects.Location = new System.Drawing.Point(418, 116);
             this.btnMDefects.Name = "btnMDefects";
-            this.btnMDefects.Size = new System.Drawing.Size(188, 29);
+            this.btnMDefects.Size = new System.Drawing.Size(199, 29);
             this.btnMDefects.TabIndex = 4;
             this.btnMDefects.Text = "Make defects";
             this.btnMDefects.UseVisualStyleBackColor = true;
@@ -93,9 +95,9 @@ namespace retouch
             // 
             // btnSaveDefects
             // 
-            this.btnSaveDefects.Location = new System.Drawing.Point(418, 192);
+            this.btnSaveDefects.Location = new System.Drawing.Point(418, 151);
             this.btnSaveDefects.Name = "btnSaveDefects";
-            this.btnSaveDefects.Size = new System.Drawing.Size(199, 26);
+            this.btnSaveDefects.Size = new System.Drawing.Size(199, 34);
             this.btnSaveDefects.TabIndex = 5;
             this.btnSaveDefects.Text = "Save defects";
             this.btnSaveDefects.UseVisualStyleBackColor = true;
@@ -103,6 +105,7 @@ namespace retouch
             // 
             // btnPerformRet
             // 
+            this.btnPerformRet.Image = ((System.Drawing.Image)(resources.GetObject("btnPerformRet.Image")));
             this.btnPerformRet.Location = new System.Drawing.Point(418, 365);
             this.btnPerformRet.Name = "btnPerformRet";
             this.btnPerformRet.Size = new System.Drawing.Size(199, 47);
@@ -191,19 +194,19 @@ namespace retouch
             // 
             this.groupBox1.Controls.Add(this.radioButtonPoint);
             this.groupBox1.Controls.Add(this.radioButtonLine);
-            this.groupBox1.Controls.Add(this.btnMDefects);
-            this.groupBox1.Location = new System.Drawing.Point(419, 78);
+            this.groupBox1.Location = new System.Drawing.Point(419, 45);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(198, 65);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Defects";
+            this.groupBox1.Text = "Defects Shape";
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1037, 471);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFindWrong);
+            this.Controls.Add(this.btnMDefects);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxThreshold);
             this.Controls.Add(this.btnPerformRetRGB);
