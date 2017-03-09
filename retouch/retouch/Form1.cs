@@ -313,6 +313,21 @@ namespace retouch
 
         }
 
+        private void chckBxGrayScale_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chckBxGrayScale.Checked == true)
+            {
+                ImageProc.ToGrayScale(ref currBit);
+                pictureBox1.Image = (Image)currBit;
+            }
+            else
+            {
+                currBit = new Bitmap((Image)originBit);
+                pictureBox1.Image = (Image)currBit;
+                pictureBox1.Refresh();
+            }
+        }
+
         
    
     }

@@ -35,7 +35,6 @@ namespace retouch
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.btnGS = new System.Windows.Forms.Button();
             this.btnMDefects = new System.Windows.Forms.Button();
             this.btnSaveDefects = new System.Windows.Forms.Button();
             this.btnPerformRet = new System.Windows.Forms.Button();
@@ -49,6 +48,7 @@ namespace retouch
             this.radioButtonLine = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnRestore = new System.Windows.Forms.Button();
+            this.chckBxGrayScale = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -73,20 +73,9 @@ namespace retouch
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
-            // btnGS
-            // 
-            this.btnGS.Image = ((System.Drawing.Image)(resources.GetObject("btnGS.Image")));
-            this.btnGS.Location = new System.Drawing.Point(418, 191);
-            this.btnGS.Name = "btnGS";
-            this.btnGS.Size = new System.Drawing.Size(199, 27);
-            this.btnGS.TabIndex = 3;
-            this.btnGS.Text = "To Grayscale";
-            this.btnGS.UseVisualStyleBackColor = true;
-            this.btnGS.Click += new System.EventHandler(this.btnGS_Click);
-            // 
             // btnMDefects
             // 
-            this.btnMDefects.Location = new System.Drawing.Point(418, 116);
+            this.btnMDefects.Location = new System.Drawing.Point(418, 139);
             this.btnMDefects.Name = "btnMDefects";
             this.btnMDefects.Size = new System.Drawing.Size(199, 29);
             this.btnMDefects.TabIndex = 4;
@@ -96,7 +85,7 @@ namespace retouch
             // 
             // btnSaveDefects
             // 
-            this.btnSaveDefects.Location = new System.Drawing.Point(418, 151);
+            this.btnSaveDefects.Location = new System.Drawing.Point(418, 174);
             this.btnSaveDefects.Name = "btnSaveDefects";
             this.btnSaveDefects.Size = new System.Drawing.Size(199, 34);
             this.btnSaveDefects.TabIndex = 5;
@@ -117,7 +106,7 @@ namespace retouch
             // 
             // btnShowDefects
             // 
-            this.btnShowDefects.Location = new System.Drawing.Point(418, 224);
+            this.btnShowDefects.Location = new System.Drawing.Point(418, 214);
             this.btnShowDefects.Name = "btnShowDefects";
             this.btnShowDefects.Size = new System.Drawing.Size(199, 34);
             this.btnShowDefects.TabIndex = 5;
@@ -195,7 +184,8 @@ namespace retouch
             // 
             this.groupBox1.Controls.Add(this.radioButtonPoint);
             this.groupBox1.Controls.Add(this.radioButtonLine);
-            this.groupBox1.Location = new System.Drawing.Point(419, 45);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBox1.Location = new System.Drawing.Point(418, 68);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(198, 65);
             this.groupBox1.TabIndex = 12;
@@ -212,9 +202,22 @@ namespace retouch
             this.btnRestore.UseVisualStyleBackColor = true;
             this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
+            // chckBxGrayScale
+            // 
+            this.chckBxGrayScale.AutoSize = true;
+            this.chckBxGrayScale.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chckBxGrayScale.BackgroundImage")));
+            this.chckBxGrayScale.Location = new System.Drawing.Point(424, 45);
+            this.chckBxGrayScale.Name = "chckBxGrayScale";
+            this.chckBxGrayScale.Size = new System.Drawing.Size(75, 17);
+            this.chckBxGrayScale.TabIndex = 14;
+            this.chckBxGrayScale.Text = "GrayScale";
+            this.chckBxGrayScale.UseVisualStyleBackColor = true;
+            this.chckBxGrayScale.CheckedChanged += new System.EventHandler(this.chckBxGrayScale_CheckedChanged);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1037, 471);
+            this.Controls.Add(this.chckBxGrayScale);
             this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFindWrong);
@@ -225,7 +228,6 @@ namespace retouch
             this.Controls.Add(this.btnPerformRet);
             this.Controls.Add(this.btnShowDefects);
             this.Controls.Add(this.btnSaveDefects);
-            this.Controls.Add(this.btnGS);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
@@ -244,7 +246,6 @@ namespace retouch
 
         private PictureBox pictureBox1;
         private Button btnLoad;
-        private Button btnGS;
         private Button btnMDefects;
         private Button btnSaveDefects;
         private Button btnPerformRet;
@@ -258,6 +259,7 @@ namespace retouch
         private RadioButton radioButtonLine;
         private GroupBox groupBox1;
         private Button btnRestore;
+        private CheckBox chckBxGrayScale;
     }
 }
 
