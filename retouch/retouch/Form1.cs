@@ -13,9 +13,9 @@ namespace retouch
     public partial class Form1 : Form
     {
         //константы состояния (для нанесения дефектов)
-        private const int STAGE_0 = 0;
-        private const int STAGE_1 = 1;
-        private const int STAGE_2 = 2;
+        private const int STAGE_0 = 0; //не наносим дефект
+        private const int STAGE_1 = 1; //рисуем точку
+        private const int STAGE_2 = 2; //рисуем линию
         
         //работа с основной графикой:
         private Bitmap originBit;
@@ -42,243 +42,221 @@ namespace retouch
         public Form1()
         {
             InitializeComponent();
+            
+            //окна для картинок:
             originBit = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
-          this.currBit = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
-          this.pictureBox1.Image = (Image) this.originBit;
-          this.pictureBox2.Image = (Image) this.originBit;
-          this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-          this.pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-          this.mode = 0;
-          this.lineStart = new Point(-1, -1);
-          this.defects = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-          this.caughtDefects = new byte[this.pictureBox1.Width, this.pictureBox1.Height];
-          this.clearArray(ref this.caughtDefects, this.pictureBox1.Width, this.pictureBox1.Height);
-          this.pointMask = new int[3, 3]
-          {
+            currBit = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
+            
+            //отображение картинок:
+            pictureBox1.Image = (Image) originBit;
+            pictureBox2.Image = (Image) originBit;
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            
+            //режим:
+            mode = STAGE_0;
+            
+            //учет линий (-1,-1) - нет начальной точки
+            lineStart = new Point(-1, -1);
+            
+            //сохранение дефектов:
+            defects = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
+            caughtDefects = new byte[pictureBox1.Width, pictureBox1.Height];
+            clearArray(ref caughtDefects, pictureBox1.Width, pictureBox1.Height);
+            
+            //инициализация масок:
+            pointMask = new int[3, 3]
             {
-              -1,
-              -1,
-              -1
-            },
+                {-1,-1,-1},
+                {-1,8,-1},
+                {-1,-1,-1}
+            };
+            lineMask = new int[3, 3]
             {
-              -1,
-              8,
-              -1
-            },
+                {-1,-1,-1},
+                {2,2,2},
+                {-1,1,-1}
+            };
+            lineMask45 = new int[3, 3]
             {
-              -1,
-              -1,
-              -1
-            }
-          };
-          this.lineMask = new int[3, 3]
-          {
+                {-1,-1,2},
+                {-1,2,-1},
+                {2,-1,-1}
+            };
+            lineMask90 = new int[3, 3]
             {
-              -1,
-              -1,
-              -1
-            },
+                {-1,2,-1},
+                {-1,2,-1},
+                {-1, 2,-1}
+            };
+            lineMask135 = new int[3, 3]
             {
-              2,
-              2,
-              2
-            },
-            {
-              -1,
-              -1,
-              -1
-            }
-          };
-          this.lineMask45 = new int[3, 3]
-          {
-            {
-              -1,
-              -1,
-              2
-            },
-            {
-              -1,
-              2,
-              -1
-            },
-            {
-              2,
-              -1,
-              -1
-            }
-          };
-          this.lineMask90 = new int[3, 3]
-          {
-            {
-              -1,
-              2,
-              -1
-            },
-            {
-              -1,
-              2,
-              -1
-            },
-            {
-              -1,
-              2,
-              -1
-            }
-          };
-          this.lineMask135 = new int[3, 3]
-          {
-            {
-              2,
-              -1,
-              -1
-            },
-            {
-              -1,
-              2,
-              -1
-            },
-            {
-              -1,
-              -1,
-              2
-            }
-          };
+                {2,-1,-1},
+                {-1,2,-1},
+                {-1,-1,2}
+            };
         }
     
-    //Additional methods:
-    private void clearArray(ref byte[,] a, int w, int h)
-    {
-      for (int index1 = 0; index1 < h; ++index1)
-      {
-        for (int index2 = 0; index2 < w; ++index2)
-          a[index2, index1] = (byte) 0;
-      }
-    }
-
-    private void btnLoad_Click(object sender, EventArgs e)
-    {
-      OpenFileDialog openFileDialog = new OpenFileDialog();
-      openFileDialog.Filter = "Image Files (*.BMP, *.JPG, *.PNG)|*.jpg;*.bmp;*.png";
-      if (openFileDialog.ShowDialog() != DialogResult.OK)
-        return;
-      this.originBit = new Bitmap(openFileDialog.FileName);
-      this.currBit = new Bitmap(openFileDialog.FileName);
-      this.pictureBox1.Image = (Image) this.currBit;
-      this.pictureBox2.Image = (Image) this.originBit;
-    }
-
-    private void btnGS_Click(object sender, EventArgs e)
-    {
-      ImageProc.ToGrayScale(ref this.currBit);
-      this.pictureBox1.Image = (Image) this.currBit;
-    }
-
-    private void btnMDefects_Click(object sender, EventArgs e)
-    {
-      this.defects = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-      this.g = Graphics.FromImage((Image) this.currBit);
-      this.g1 = Graphics.FromImage((Image) this.defects);
-      if (this.radioButtonPoint.Checked)
-        this.mode = 1;
-      else if (this.radioButtonLine.Checked)
-      {
-        this.mode = 2;
-      }
-      else
-      {
-        int num = (int) MessageBox.Show("Choose the type of defect", "Warning!");
-      }
-    }
-
-    private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-    {
-      if (this.mode == 1)
-      {
-        this.g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-        this.g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-        this.pictureBox1.Refresh();
-      }
-      else
-      {
-        if (this.mode != 2)
-          return;
-        if (this.lineStart.X == -1)
+        //очистить массив байт:
+        private void clearArray(ref byte[,] a, int w, int h)
         {
-          this.lineStart = new Point(e.X, e.Y);
-          this.g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-          this.g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
-          this.pictureBox1.Refresh();
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                    a[i,j] = (byte) 0;
+            }
         }
-        else
+
+        private void btnLoad_Click(object sender, EventArgs e)
         {
-          this.g.DrawLine(new Pen(Color.Pink, 1f), this.lineStart, e.Location);
-          this.g1.DrawLine(new Pen(Color.Pink, 1f), this.lineStart, e.Location);
-          this.lineStart = new Point(-1, -1);
-          this.pictureBox1.Refresh();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.BMP, *.JPG, *.PNG)|*.jpg;*.bmp;*.png";
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            originBit = new Bitmap(openFileDialog.FileName);
+            currBit = new Bitmap(openFileDialog.FileName);
+          
+            pictureBox1.Image = (Image) currBit;
+            pictureBox2.Image = (Image) originBit;
         }
-      }
-    }
 
-    private void btnSaveDefects_Click(object sender, EventArgs e)
-    {
-      this.mode = 0;
-    }
-
-    private void radioButtonPoint_CheckedChanged(object sender, EventArgs e)
-    {
-      if (this.radioButtonPoint.Checked)
-        this.mode = 1;
-      else
-        this.mode = 2;
-    }
-
-    private void btnFindWrong_Click(object sender, EventArgs e)
-    {
-      int num1;
-      try
-      {
-        num1 = int.Parse(this.textBoxThreshold.Text.ToString());
-      }
-      catch (Exception ex)
-      {
-        int num2 = (int) MessageBox.Show(ex.Message, "Error!");
-        return;
-      }
-      int width = this.pictureBox1.Width;
-      int height = this.pictureBox1.Height;
-      this.clearArray(ref this.caughtDefects, this.pictureBox1.Width, this.pictureBox1.Height);
-      for (int index1 = 0; index1 < height - 3; ++index1)
-      {
-        for (int index2 = 0; index2 < width - 3; ++index2)
+        private void btnGS_Click(object sender, EventArgs e)
         {
-          int num2 = 0;
-          for (int index3 = 0; index3 < 3; ++index3)
-          {
-            for (int index4 = 0; index4 < 3; ++index4)
-              num2 += this.pointMask[index4, index3] * (int) this.currBit.GetPixel(index2 + index4, index1 + index3).R;
-          }
-          if (num2 >= num1)
-            this.caughtDefects[index2 + 1, index1 + 1] = byte.MaxValue;
+            ImageProc.ToGrayScale(ref currBit);
+            pictureBox1.Image = (Image) currBit;
         }
-      }
-    }
 
-    private void btnShowDefects_Click(object sender, EventArgs e)
-    {
-      int width = this.pictureBox1.Width;
-      int height = this.pictureBox1.Height;
-      for (int y = 0; y < height; ++y)
-      {
-        for (int x = 0; x < width; ++x)
+        private void btnMDefects_Click(object sender, EventArgs e)
         {
-          if ((int) this.caughtDefects[x, y] == (int) byte.MaxValue)
-          {
-            this.g.FillRectangle(Brushes.Red, new Rectangle(x, y, 1, 1));
-            this.pictureBox1.Refresh();
-          }
+            defects = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
+            g = Graphics.FromImage((Image) currBit);
+            g1 = Graphics.FromImage((Image) defects); //прорисовка дефектов на отдельном полотне
+
+            if (radioButtonPoint.Checked)
+            {
+                mode = STAGE_1;
+            }
+            else if (radioButtonLine.Checked)
+            {
+                mode = STAGE_2;
+            }
+            else
+            {
+                MessageBox.Show("Choose the type of defect", "Warning!");
+            }
         }
-      }
-    }
+
+        //нанесение дефектов:
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (mode == STAGE_1)
+            {
+                //рисуем точку, заполняя прямоугольник 1х1:
+                g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                pictureBox1.Refresh();
+            }
+            else if (mode == STAGE_2)
+            {
+                if (lineStart.X == -1) //если начала линии нет (начинаем рисовать новую)
+                {
+                    //фиксируем начало линии:
+                    lineStart = new Point(e.X, e.Y);
+                    g.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                    g1.FillRectangle(Brushes.Pink, new Rectangle(e.X, e.Y, 1, 1));
+                    pictureBox1.Refresh();
+                }
+                else //если начало есть, то фиксируем конец линии:
+                {
+                    g.DrawLine(new Pen(Color.Pink, 1f), lineStart, e.Location);
+                    g1.DrawLine(new Pen(Color.Pink, 1f), lineStart, e.Location);
+                    
+                    //заполняем точку начала значением (-1,-1) - нет фиксированной точки
+                    lineStart = new Point(-1, -1);
+                    pictureBox1.Refresh();
+                }
+            }
+        }
+
+        private void btnSaveDefects_Click(object sender, EventArgs e)
+        {
+            mode = STAGE_0;
+        }
+
+        //если изменили тип дефекта:
+        private void radioButtonPoint_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonPoint.Checked)
+            {
+                mode = STAGE_1;
+            }
+            else
+            {
+                mode = STAGE_2;
+            }
+                
+        }
+
+        //найти битые пиксели!
+        private void btnFindWrong_Click(object sender, EventArgs e)
+        {
+            int p; //значение порога
+            try
+            {
+                p = int.Parse(textBoxThreshold.Text.ToString());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error of the threshold value!");
+                return;
+            }
+            
+            int width = pictureBox1.Width;
+            int height = pictureBox1.Height;
+            
+            //очистка ранее найденных дефектов:
+            clearArray(ref caughtDefects, pictureBox1.Width, pictureBox1.Height);
+            
+            //основной цикл:
+            for (int j = 0; j < height - 3; j++)
+            {
+                for (int i = 0; i < width - 3; i++)
+                {
+                    int r = 0;
+                    for (int m = 0; m < 3; m++)
+                    {
+                        for (int l = 0; l < 3; l++)
+                            r += pointMask[m, l] * (int) currBit.GetPixel(i + m, j + l).R;
+                    }
+                    if (r >= p)
+                    {
+                        caughtDefects[i + 1, j + 1] = byte.MaxValue;
+                    }
+                }
+            }
+
+            //оповещение:
+            MessageBox.Show("Defective pixels have been found!", "All is right", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        //показать найденные дефекты:
+        private void btnShowDefects_Click(object sender, EventArgs e)
+        {
+            int width = pictureBox1.Width;
+            int height = pictureBox1.Height;
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
+                {
+                    if (caughtDefects[x, y] == byte.MaxValue)
+                    {
+                        g.FillRectangle(Brushes.Red, new Rectangle(x, y, 1, 1));
+                        pictureBox1.Refresh();
+                    }
+                }
+            }
+        }
 
         
    
