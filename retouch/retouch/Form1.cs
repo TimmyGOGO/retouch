@@ -12,145 +12,138 @@ namespace retouch
 {
     public partial class Form1 : Form
     {
+        //константы состояния (для нанесения дефектов)
+        private const int STAGE_0 = 0;
+        private const int STAGE_1 = 1;
+        private const int STAGE_2 = 2;
         
-          private const int STAGE_0 = 0;
-            private const int STAGE_1 = 1;
-            private const int STAGE_2 = 2;
-    
-            private Bitmap originBit;
-    private Bitmap currBit;
-    private Graphics g;
-    private Graphics g1;
-    private Bitmap defects;
-    private byte[,] caughtDefects;
-    private int mode;
-    private Point lineStart;
-    private int[,] pointMask;
-    private int[,] lineMask;
-    private int[,] lineMask45;
-    private int[,] lineMask90;
-    private int[,] lineMask135;
-    private PictureBox pictureBox1;
-    private Button btnLoad;
-    private Button btnGS;
-    private Button btnMDefects;
-    private Button btnSaveDefects;
-    private Button btnPerformRet;
-    private Button btnShowDefects;
-    private TextBox textBoxThreshold;
-    private Label label1;
-    private PictureBox pictureBox2;
-    private Button btnFindWrong;
-    private Button btnPerformRetRGB;
-    private RadioButton radioButtonPoint;
-    private RadioButton radioButtonLine;
-    private GroupBox groupBox1;
+        //работа с основной графикой:
+        private Bitmap originBit;
+        private Bitmap currBit;
+        private Graphics g;
+        private Graphics g1;
+        
+        //сохранение дефектов:
+        private Bitmap defects;
+        private byte[,] caughtDefects;
+        
+        //режим использования окна (изображение слева)
+        private int mode;
+        //переменная для учета линий:
+        private Point lineStart;
+        
+        //набор масок:
+        private int[,] pointMask;
+        private int[,] lineMask;
+        private int[,] lineMask45;
+        private int[,] lineMask90;
+        private int[,] lineMask135;
 
-    public Form1()
-    {
-        InitializeComponent();
-      this.originBit = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-      this.currBit = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-      this.pictureBox1.Image = (Image) this.originBit;
-      this.pictureBox2.Image = (Image) this.originBit;
-      this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-      this.pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-      this.mode = 0;
-      this.lineStart = new Point(-1, -1);
-      this.defects = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
-      this.caughtDefects = new byte[this.pictureBox1.Width, this.pictureBox1.Height];
-      this.clearArray(ref this.caughtDefects, this.pictureBox1.Width, this.pictureBox1.Height);
-      this.pointMask = new int[3, 3]
-      {
+        public Form1()
         {
-          -1,
-          -1,
-          -1
-        },
-        {
-          -1,
-          8,
-          -1
-        },
-        {
-          -1,
-          -1,
-          -1
+            InitializeComponent();
+            originBit = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
+          this.currBit = helpFunc.CreateNewBitmap(pictureBox1.Width, pictureBox1.Height);
+          this.pictureBox1.Image = (Image) this.originBit;
+          this.pictureBox2.Image = (Image) this.originBit;
+          this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+          this.pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+          this.mode = 0;
+          this.lineStart = new Point(-1, -1);
+          this.defects = helpFunc.CreateNewBitmap(this.pictureBox1.Width, this.pictureBox1.Height);
+          this.caughtDefects = new byte[this.pictureBox1.Width, this.pictureBox1.Height];
+          this.clearArray(ref this.caughtDefects, this.pictureBox1.Width, this.pictureBox1.Height);
+          this.pointMask = new int[3, 3]
+          {
+            {
+              -1,
+              -1,
+              -1
+            },
+            {
+              -1,
+              8,
+              -1
+            },
+            {
+              -1,
+              -1,
+              -1
+            }
+          };
+          this.lineMask = new int[3, 3]
+          {
+            {
+              -1,
+              -1,
+              -1
+            },
+            {
+              2,
+              2,
+              2
+            },
+            {
+              -1,
+              -1,
+              -1
+            }
+          };
+          this.lineMask45 = new int[3, 3]
+          {
+            {
+              -1,
+              -1,
+              2
+            },
+            {
+              -1,
+              2,
+              -1
+            },
+            {
+              2,
+              -1,
+              -1
+            }
+          };
+          this.lineMask90 = new int[3, 3]
+          {
+            {
+              -1,
+              2,
+              -1
+            },
+            {
+              -1,
+              2,
+              -1
+            },
+            {
+              -1,
+              2,
+              -1
+            }
+          };
+          this.lineMask135 = new int[3, 3]
+          {
+            {
+              2,
+              -1,
+              -1
+            },
+            {
+              -1,
+              2,
+              -1
+            },
+            {
+              -1,
+              -1,
+              2
+            }
+          };
         }
-      };
-      this.lineMask = new int[3, 3]
-      {
-        {
-          -1,
-          -1,
-          -1
-        },
-        {
-          2,
-          2,
-          2
-        },
-        {
-          -1,
-          -1,
-          -1
-        }
-      };
-      this.lineMask45 = new int[3, 3]
-      {
-        {
-          -1,
-          -1,
-          2
-        },
-        {
-          -1,
-          2,
-          -1
-        },
-        {
-          2,
-          -1,
-          -1
-        }
-      };
-      this.lineMask90 = new int[3, 3]
-      {
-        {
-          -1,
-          2,
-          -1
-        },
-        {
-          -1,
-          2,
-          -1
-        },
-        {
-          -1,
-          2,
-          -1
-        }
-      };
-      this.lineMask135 = new int[3, 3]
-      {
-        {
-          2,
-          -1,
-          -1
-        },
-        {
-          -1,
-          2,
-          -1
-        },
-        {
-          -1,
-          -1,
-          2
-        }
-      };
-    }
     
     //Additional methods:
     private void clearArray(ref byte[,] a, int w, int h)
@@ -288,6 +281,6 @@ namespace retouch
     }
 
         
-        }
+   
     }
 }
