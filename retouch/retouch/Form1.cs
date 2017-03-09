@@ -58,8 +58,8 @@ namespace retouch
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             
             //цвет для дефектов красный (по умолчанию):
-            defBrush = Brushes.Red;
-            defPen = new Pen(Color.Red, 1f);
+            defBrush = Brushes.Yellow;
+            defPen = new Pen(Color.Yellow, 1f);
 
             //режим:
             mode = STAGE_0;
@@ -228,13 +228,14 @@ namespace retouch
                         for (int l = 0; l < 3; l++)
                         {
                             r[0] += pointMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            //идеальная ретушь для Этуша - 550 (на Черно-белое)
                             //  не работает:
-                            /*
+                            
                             r[1] += lineMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
                             r[2] += lineMask45[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
                             r[3] += lineMask90[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
                             r[4] += lineMask135[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            */
+                            
                         }
                     }
                     //взятие значений по модулю:
@@ -302,6 +303,14 @@ namespace retouch
                 }
             }
             pictureBox1.Refresh();
+        }
+
+        private void btnRestore_Click(object sender, EventArgs e)
+        {
+            currBit = new Bitmap((Image)originBit);
+            pictureBox1.Image = (Image)currBit;
+            pictureBox1.Refresh();
+
         }
 
         

@@ -48,6 +48,7 @@ namespace retouch
             this.radioButtonPoint = new System.Windows.Forms.RadioButton();
             this.radioButtonLine = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnRestore = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -201,9 +202,20 @@ namespace retouch
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Defects Shape";
             // 
+            // btnRestore
+            // 
+            this.btnRestore.Location = new System.Drawing.Point(12, 418);
+            this.btnRestore.Name = "btnRestore";
+            this.btnRestore.Size = new System.Drawing.Size(125, 47);
+            this.btnRestore.TabIndex = 13;
+            this.btnRestore.Text = "Restore the original picture";
+            this.btnRestore.UseVisualStyleBackColor = true;
+            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1037, 471);
+            this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFindWrong);
             this.Controls.Add(this.btnMDefects);
@@ -245,6 +257,7 @@ namespace retouch
         private RadioButton radioButtonPoint;
         private RadioButton radioButtonLine;
         private GroupBox groupBox1;
+        private Button btnRestore;
     }
 }
 
