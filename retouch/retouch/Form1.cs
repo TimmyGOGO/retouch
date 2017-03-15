@@ -287,12 +287,13 @@ namespace retouch
             pictureBox1.Refresh();
         }
 
-        //ретуширование черно-белой фотографии:
+        //ретуширование черно-белой/цветной фотографии:
         private void btnPerformRet_Click(object sender, EventArgs e)
         {
 
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
+
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -301,23 +302,30 @@ namespace retouch
                     {
                         //восстановление битого пикселя:
                         int nonDefPixAmount = 0;
-                        int summ_component = 0;
+                        int[] sumPix = new int[3]{0,0,0};
+
                         for (int m = -1; m <= 1; m++)
                         {
                             for (int l = -1; l <= 1; l++)
                             {
-                                if (m != 0 || l != 0)
+                                if (m != 0 || l != 0) //если элемент не в середине
                                 {
                                     if (caughtDefects[x + m, y + l] == false)
                                     {
                                         nonDefPixAmount++;
-                                        summ_component += (int)currBit.GetPixel(x + m, y + l).R;
+                                        sumPix[0] += (int)currBit.GetPixel(x + m, y + l).R;
+                                        sumPix[1] += (int)currBit.GetPixel(x + m, y + l).G;
+                                        sumPix[2] += (int)currBit.GetPixel(x + m, y + l).B;
                                     }
                                 }
                             }
                         }
-                        int cP = summ_component / nonDefPixAmount;
-                        currBit.SetPixel(x, y, Color.FromArgb(cP, cP, cP));
+
+                        for (int i = 0; i < 3; i++)
+                        {
+                            sumPix[i] = sumPix[i] / nonDefPixAmount; 
+                        }
+                        currBit.SetPixel(x, y, Color.FromArgb(sumPix[0], sumPix[1], sumPix[2]));
                     }
                 }
 
