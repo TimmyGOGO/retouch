@@ -202,7 +202,7 @@ namespace retouch
                 
         }
 
-        //найти битые пиксели!
+        //найти битые пиксели! (на цветном/черно-белом
         private void btnFindWrong_Click(object sender, EventArgs e)
         {
             int p; //значение порога
@@ -231,34 +231,48 @@ namespace retouch
                 for (int i = 0; i < width - 3; i++)
                 {
                     //найдем значения откликов по 5-ти маскам:
-                    int[] r = new int[5]{0,0,0,0,0};
+                    int[,] r = new int[3,5];
+                    int gray = (chckBxGrayScale.Checked == true) ? 1 : 3;
+
                     for (int m = 0; m < 3; m++)
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            r[0] += pointMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            //идеальная ретушь для Этуша - 550 (на Черно-белое)
-                            //  не работает:
-                            
-                            r[1] += lineMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            r[2] += lineMask45[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            r[3] += lineMask90[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
-                            r[4] += lineMask135[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            for (int g = 0; g < gray; g++)
+                            {
+                                r[g, 0] += pointMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                                //идеальная ретушь для Этуша - 550 (на Черно-белое)
+                                //  не работает:
+
+                                r[g, 1] += lineMask[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                                r[g, 2] += lineMask45[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                                r[g, 3] += lineMask90[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                                r[g, 4] += lineMask135[m, l] * (int)currBit.GetPixel(i + m, j + l).R;
+                            }
                             
                         }
                     }
-                    //взятие значений по модулю:
-                    for (int m = 0; m < 5; m++) { r[m] = Math.Abs(r[m]); }
+
+                    //взятие значений по модулю и поиск макисмума:
+                    int maxR = 0;
+                    for (int g = 0; g < gray; g++)
+                    {
+                        for (int m = 0; m < 5; m++)
+                        {
+                            r[g, m] = Math.Abs(r[g, m]);
+                            maxR = (r[g,m] > maxR)? r[g,m] : maxR;
+                        }
+                    }
 
                     //сравним максимальное значение отклика с порогом:
-                    if (r.Max() >= p)
+                    if (maxR >= p)
                     {
                         caughtDefects[i + 1, j + 1] = true;
                     }
                 }
 
                 //для отображения прогресса: (при условии что height = 400!)
-                if ((j + 1) % 4 == 0)
+                if ((j + 1) % 4 == 0) //цикл на 400 итераций, через каждые 4 прибавляется 1% (в итоге - 100%) 
                 {
                     progressBar1.Value += 1;
                 }
@@ -337,6 +351,7 @@ namespace retouch
         {
             currBit = new Bitmap((Image)originBit);
             pictureBox1.Image = (Image)currBit;
+            chckBxGrayScale.Checked = false;
             pictureBox1.Refresh();
 
         }

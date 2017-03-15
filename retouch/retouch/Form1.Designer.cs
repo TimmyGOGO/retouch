@@ -43,7 +43,6 @@ namespace retouch
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnFindWrong = new System.Windows.Forms.Button();
-            this.btnPerformRetRGB = new System.Windows.Forms.Button();
             this.radioButtonPoint = new System.Windows.Forms.RadioButton();
             this.radioButtonLine = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -102,7 +101,7 @@ namespace retouch
             this.btnPerformRet.Name = "btnPerformRet";
             this.btnPerformRet.Size = new System.Drawing.Size(199, 47);
             this.btnPerformRet.TabIndex = 6;
-            this.btnPerformRet.Text = "Perform retouching(Gray)";
+            this.btnPerformRet.Text = "Perform retouching";
             this.btnPerformRet.UseVisualStyleBackColor = true;
             this.btnPerformRet.Click += new System.EventHandler(this.btnPerformRet_Click);
             // 
@@ -149,15 +148,6 @@ namespace retouch
             this.btnFindWrong.Text = "Find wrong pixels";
             this.btnFindWrong.UseVisualStyleBackColor = true;
             this.btnFindWrong.Click += new System.EventHandler(this.btnFindWrong_Click);
-            // 
-            // btnPerformRetRGB
-            // 
-            this.btnPerformRetRGB.Location = new System.Drawing.Point(418, 418);
-            this.btnPerformRetRGB.Name = "btnPerformRetRGB";
-            this.btnPerformRetRGB.Size = new System.Drawing.Size(199, 47);
-            this.btnPerformRetRGB.TabIndex = 6;
-            this.btnPerformRetRGB.Text = "Perform retouching(RGB)";
-            this.btnPerformRetRGB.UseVisualStyleBackColor = true;
             // 
             // radioButtonPoint
             // 
@@ -245,7 +235,6 @@ namespace retouch
             this.Controls.Add(this.btnMDefects);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxThreshold);
-            this.Controls.Add(this.btnPerformRetRGB);
             this.Controls.Add(this.btnPerformRet);
             this.Controls.Add(this.btnShowDefects);
             this.Controls.Add(this.btnSaveDefects);
@@ -275,7 +264,6 @@ namespace retouch
         private Label label1;
         private PictureBox pictureBox2;
         private Button btnFindWrong;
-        private Button btnPerformRetRGB;
         private RadioButton radioButtonPoint;
         private RadioButton radioButtonLine;
         private GroupBox groupBox1;
