@@ -25,6 +25,7 @@ namespace retouch
 
         //средства для окрашивания дефектов:
         private Brush defBrush;
+        private Brush defShowBrush;
         private Pen defPen;
         
         //сохранение дефектов:
@@ -59,6 +60,7 @@ namespace retouch
             
             //цвет для дефектов красный (по умолчанию):
             defBrush = Brushes.Yellow;
+            defShowBrush = Brushes.Red;
             defPen = new Pen(Color.Yellow, 1f);
 
             //режим:
@@ -294,7 +296,7 @@ namespace retouch
                 {
                     if (caughtDefects[x, y] == true)
                     {
-                        g.FillRectangle(defBrush, new Rectangle(x, y, 1, 1));
+                        g.FillRectangle(defShowBrush, new Rectangle(x, y, 1, 1));
                     }
                 }
             }
