@@ -15,7 +15,8 @@ namespace retouch
         //константы состояния (для нанесения дефектов)
         private const int STAGE_0 = 0; //не наносим дефект
         private const int STAGE_1 = 1; //рисуем точку
-        private const int STAGE_2 = 2; //рисуем линию
+        private const int STAGE_2 = 2; //рисуем линию 
+
         
         //работа с основной графикой:
         private Bitmap originBit;
@@ -23,10 +24,11 @@ namespace retouch
         private Graphics g;
         private Graphics g1;
 
-        //средства для окрашивания дефектов:
+        //средства для визуализации дефектов:
         private Brush defBrush;
         private Brush defShowBrush;
         private Pen defPen;
+        private int size;
         
         //сохранение дефектов:
         private Bitmap defects;
@@ -63,7 +65,12 @@ namespace retouch
             defShowBrush = Brushes.Red;
             defPen = new Pen(Color.Yellow, 1f);
 
+            //размер дефектов:
+            radioButton1px.Checked = true;
+            size = 1;
+
             //режим:
+            radioButtonPoint.Checked = true;
             mode = STAGE_0;
             
             //учет линий (-1,-1) - нет начальной точки
@@ -159,8 +166,8 @@ namespace retouch
             if (mode == STAGE_1)
             {
                 //рисуем точку, заполняя прямоугольник 1х1:
-                g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
-                g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
+                g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, size, size));
+                g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, size, size));
                 pictureBox1.Refresh();
             }
             else if (mode == STAGE_2)
@@ -169,8 +176,8 @@ namespace retouch
                 {
                     //фиксируем начало линии:
                     lineStart = new Point(e.X, e.Y);
-                    g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
-                    g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, 1, 1));
+                    g.FillRectangle(defBrush, new Rectangle(e.X, e.Y, size, size));
+                    g1.FillRectangle(defBrush, new Rectangle(e.X, e.Y, size, size));
                     pictureBox1.Refresh();
                 }
                 else //если начало есть, то фиксируем конец линии:
@@ -204,7 +211,8 @@ namespace retouch
                 
         }
 
-        //найти битые пиксели! (на цветном/черно-белом
+
+        //найти битые пиксели!
         private void btnFindWrong_Click(object sender, EventArgs e)
         {
             int p; //значение порога
@@ -379,6 +387,21 @@ namespace retouch
             pictureBox1.Image = (Image)currBit;
             chckBxGrayScale.Checked = true;
         }
+
+        private void radioButton1px_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1px.Checked)
+            {
+                size = 1;
+                defPen = new Pen(Color.Yellow, 1f);
+            }
+            else
+            {
+                size = 2;
+                defPen = new Pen(Color.Yellow, 2f);
+            }
+        }
+
 
         
    

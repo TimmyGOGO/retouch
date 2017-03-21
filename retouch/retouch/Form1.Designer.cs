@@ -50,9 +50,13 @@ namespace retouch
             this.chckBxGrayScale = new System.Windows.Forms.CheckBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.btnMakeGray = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButton1px = new System.Windows.Forms.RadioButton();
+            this.radioButton2px = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -179,7 +183,7 @@ namespace retouch
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.groupBox1.Location = new System.Drawing.Point(418, 68);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(198, 65);
+            this.groupBox1.Size = new System.Drawing.Size(97, 65);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Defects Shape";
@@ -188,7 +192,7 @@ namespace retouch
             // 
             this.btnRestore.Location = new System.Drawing.Point(12, 418);
             this.btnRestore.Name = "btnRestore";
-            this.btnRestore.Size = new System.Drawing.Size(125, 47);
+            this.btnRestore.Size = new System.Drawing.Size(107, 47);
             this.btnRestore.TabIndex = 13;
             this.btnRestore.Text = "Restore the original picture";
             this.btnRestore.UseVisualStyleBackColor = true;
@@ -215,13 +219,48 @@ namespace retouch
             // 
             // btnMakeGray
             // 
-            this.btnMakeGray.Location = new System.Drawing.Point(144, 418);
+            this.btnMakeGray.Location = new System.Drawing.Point(125, 418);
             this.btnMakeGray.Name = "btnMakeGray";
             this.btnMakeGray.Size = new System.Drawing.Size(94, 47);
             this.btnMakeGray.TabIndex = 16;
             this.btnMakeGray.Text = "Make gray";
             this.btnMakeGray.UseVisualStyleBackColor = true;
             this.btnMakeGray.Click += new System.EventHandler(this.btnMakeGray_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioButton1px);
+            this.groupBox2.Controls.Add(this.radioButton2px);
+            this.groupBox2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBox2.Location = new System.Drawing.Point(522, 68);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(97, 65);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Defects Size";
+            // 
+            // radioButton1px
+            // 
+            this.radioButton1px.AutoSize = true;
+            this.radioButton1px.Location = new System.Drawing.Point(6, 19);
+            this.radioButton1px.Name = "radioButton1px";
+            this.radioButton1px.Size = new System.Drawing.Size(42, 17);
+            this.radioButton1px.TabIndex = 10;
+            this.radioButton1px.TabStop = true;
+            this.radioButton1px.Text = "1px";
+            this.radioButton1px.UseVisualStyleBackColor = true;
+            this.radioButton1px.CheckedChanged += new System.EventHandler(this.radioButton1px_CheckedChanged);
+            // 
+            // radioButton2px
+            // 
+            this.radioButton2px.AutoSize = true;
+            this.radioButton2px.Location = new System.Drawing.Point(6, 42);
+            this.radioButton2px.Name = "radioButton2px";
+            this.radioButton2px.Size = new System.Drawing.Size(42, 17);
+            this.radioButton2px.TabIndex = 11;
+            this.radioButton2px.TabStop = true;
+            this.radioButton2px.Text = "2px";
+            this.radioButton2px.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -230,6 +269,7 @@ namespace retouch
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.chckBxGrayScale);
             this.Controls.Add(this.btnRestore);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFindWrong);
             this.Controls.Add(this.btnMDefects);
@@ -247,6 +287,8 @@ namespace retouch
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,6 +313,9 @@ namespace retouch
         private CheckBox chckBxGrayScale;
         private ProgressBar progressBar1;
         private Button btnMakeGray;
+        private GroupBox groupBox2;
+        private RadioButton radioButton1px;
+        private RadioButton radioButton2px;
     }
 }
 
