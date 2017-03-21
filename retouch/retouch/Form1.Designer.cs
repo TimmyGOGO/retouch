@@ -53,6 +53,10 @@ namespace retouch
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioButton1px = new System.Windows.Forms.RadioButton();
             this.radioButton2px = new System.Windows.Forms.RadioButton();
+            this.btnWavelet = new System.Windows.Forms.Button();
+            this.btnRevWavelet = new System.Windows.Forms.Button();
+            this.textBoxWavelet = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -262,9 +266,47 @@ namespace retouch
             this.radioButton2px.Text = "2px";
             this.radioButton2px.UseVisualStyleBackColor = true;
             // 
+            // btnWavelet
+            // 
+            this.btnWavelet.Location = new System.Drawing.Point(315, 418);
+            this.btnWavelet.Name = "btnWavelet";
+            this.btnWavelet.Size = new System.Drawing.Size(97, 47);
+            this.btnWavelet.TabIndex = 17;
+            this.btnWavelet.Text = "Do Wavelet filter";
+            this.btnWavelet.UseVisualStyleBackColor = true;
+            this.btnWavelet.Click += new System.EventHandler(this.btnWavelet_Click);
+            // 
+            // btnRevWavelet
+            // 
+            this.btnRevWavelet.Location = new System.Drawing.Point(625, 418);
+            this.btnRevWavelet.Name = "btnRevWavelet";
+            this.btnRevWavelet.Size = new System.Drawing.Size(97, 47);
+            this.btnRevWavelet.TabIndex = 17;
+            this.btnRevWavelet.Text = "Reverse Wavelet";
+            this.btnRevWavelet.UseVisualStyleBackColor = true;
+            this.btnRevWavelet.Click += new System.EventHandler(this.btnRevWavelet_Click);
+            // 
+            // textBoxWavelet
+            // 
+            this.textBoxWavelet.Location = new System.Drawing.Point(419, 434);
+            this.textBoxWavelet.Name = "textBoxWavelet";
+            this.textBoxWavelet.Size = new System.Drawing.Size(199, 20);
+            this.textBoxWavelet.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(418, 418);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(115, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Threshold for Wavelet:";
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1037, 471);
+            this.Controls.Add(this.btnRevWavelet);
+            this.Controls.Add(this.btnWavelet);
             this.Controls.Add(this.btnMakeGray);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.chckBxGrayScale);
@@ -273,6 +315,8 @@ namespace retouch
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnFindWrong);
             this.Controls.Add(this.btnMDefects);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBoxWavelet);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxThreshold);
             this.Controls.Add(this.btnPerformRet);
@@ -316,6 +360,10 @@ namespace retouch
         private GroupBox groupBox2;
         private RadioButton radioButton1px;
         private RadioButton radioButton2px;
+        private Button btnWavelet;
+        private Button btnRevWavelet;
+        private TextBox textBoxWavelet;
+        private Label label2;
     }
 }
 

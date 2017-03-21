@@ -36,6 +36,9 @@ namespace retouch
         
         //режим использования окна (изображение слева)
         private int mode;
+        //переход на вейвлет
+        private bool isWavelet;
+
         //переменная для учета линий:
         private Point lineStart;
         
@@ -70,6 +73,7 @@ namespace retouch
             size = 1;
 
             //режим:
+            isWavelet = false;
             radioButtonPoint.Checked = true;
             mode = STAGE_0;
             
@@ -211,6 +215,8 @@ namespace retouch
                 
         }
 
+        //выделим функции поиска и исправления дефектов:
+        //private bool[,] findDefectedPixels(Bitmap 
 
         //найти битые пиксели!
         private void btnFindWrong_Click(object sender, EventArgs e)
@@ -400,6 +406,50 @@ namespace retouch
                 size = 2;
                 defPen = new Pen(Color.Yellow, 2f);
             }
+        }
+
+        private void btnWavelet_Click(object sender, EventArgs e)
+        {
+            int p; //значение порога
+            try
+            {
+                p = int.Parse(textBoxWavelet.Text.ToString());
+                if (p <= 0)
+                    throw new Exception();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error of wavelet's threshold value!");
+                return;
+            }
+
+            //переход в серое
+            btnMakeGray.PerformClick();
+            
+            //переход на вейвлет:
+            isWavelet = true;
+            
+            currBit = WaveletAndRetouch.waveletFilter(currBit, p);
+            pictureBox1.Image = (Image)currBit;
+            pictureBox1.Refresh();
+
+        }
+
+        private void btnRevWavelet_Click(object sender, EventArgs e)
+        {
+            //переход на вейвлет:
+            if (isWavelet == false)
+            {
+                MessageBox.Show("Check your actions!", "The Wavelet filter hasn't been used on the image!");
+                return;
+            }
+
+            isWavelet = false;
+
+            currBit = WaveletAndRetouch.reverseWavelet(currBit, 1);
+            pictureBox1.Image = (Image)currBit;
+            pictureBox1.Refresh();
+
         }
 
 

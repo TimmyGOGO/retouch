@@ -59,7 +59,55 @@ namespace retouch
             img.UnlockBits(bmData);
 
         }
-             
+        
+        //get full histogram of an image:
+        public static void getFullHistogramm(out int[] hist, Bitmap bmp)
+        {
+            BitmapData bmData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+            //histogramm definition:
+            hist = new int[256];
+
+            unsafe
+            {
+                byte* ptr = (byte*)bmData.Scan0;
+
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    for (int x = 0; x < bmp.Width; x++)
+                    {
+                        hist[(int)(ptr[0])]++; //red
+                        ptr += 3;
+                    }
+                    ptr += bmData.Stride - bmp.Width * 3;
+                }
+            }
+            bmp.UnlockBits(bmData);
+
+        }
+        
+        //compute an entropy of an image:
+        public static double calculateEntropy(Bitmap bmp)
+        {
+            int[] hist = null;
+            getFullHistogramm(out hist, bmp);
+
+            long N = bmp.Width * bmp.Height;
+
+            double H = 0.0;
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (hist[i] != 0)
+                {
+                    H += hist[i] * Math.Log((double)(N / hist[i]), 2.0);
+                }
+            }
+            H /= N;
+
+            return Math.Abs(H);
+        }
+
         //apply the adaptive binarization
         public static void AdaptBinarizate(ref Bitmap img) { 
             
