@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -37,7 +38,7 @@ namespace retouch
         //режим использования окна (изображение слева)
         private int mode;
         //переход на вейвлет
-        private bool isWavelet;
+        private int waveletCount;
 
         //переменная для учета линий:
         private Point lineStart;
@@ -64,16 +65,16 @@ namespace retouch
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             
             //цвет для дефектов красный (по умолчанию):
-            defBrush = Brushes.Yellow;
+            defBrush = Brushes.White;
             defShowBrush = Brushes.Red;
-            defPen = new Pen(Color.Yellow, 1f);
+            defPen = new Pen(Color.White, 1f);
 
             //размер дефектов:
             radioButton1px.Checked = true;
             size = 1;
 
             //режим:
-            isWavelet = false;
+            waveletCount = 0;
             radioButtonPoint.Checked = true;
             mode = STAGE_0;
             
@@ -199,6 +200,27 @@ namespace retouch
         private void btnSaveDefects_Click(object sender, EventArgs e)
         {
             mode = STAGE_0;
+            /*
+            ArrayList lines = ImageProc.doLineSearch(ref currBit);
+            foreach (toch p in lines)
+            {
+                int width = pictureBox1.Width;
+                int height = pictureBox1.Height;
+
+                int y = 0;
+                for (int x = 0; x < width; x++)
+                {
+                    y = p.O * x + p.R;
+                    if (y < height && y >= 0)
+                    {
+                        currBit.SetPixel(x, y, Color.Red);
+                    }
+                       
+                }
+            }
+            pictureBox1.Image = currBit;
+            pictureBox1.Refresh();
+             */ 
         }
 
         //если изменили тип дефекта:
@@ -238,6 +260,12 @@ namespace retouch
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
             
+            //если работаем с вейвлетом:
+            for(int i = 0; i < waveletCount; i++){
+                width = width / 2;
+                height = height / 2;
+            }
+
             //очистка ранее найденных дефектов:
             Array.Clear(caughtDefects, 0, caughtDefects.Length);
             
@@ -302,6 +330,8 @@ namespace retouch
         //показать найденные дефекты:
         private void btnShowDefects_Click(object sender, EventArgs e)
         {
+            g = Graphics.FromImage((Image)currBit);
+
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
             for (int y = 0; y < height; ++y)
@@ -317,12 +347,42 @@ namespace retouch
             pictureBox1.Refresh();
         }
 
+        int twice = 2;
+
         //ретуширование черно-белой/цветной фотографии:
         private void btnPerformRet_Click(object sender, EventArgs e)
         {
 
             int width = pictureBox1.Width;
             int height = pictureBox1.Height;
+
+            //если работаем с вейвлетом:
+            if (waveletCount > 0)
+            {
+
+                for (int i = 0; i < waveletCount; i++)
+                {
+                    width = width / 2;
+                    height = height / 2;
+                }
+
+                //и зануляем битые пиксели на соседних изображениях:!!!
+                for (int y = 0; y < height; ++y)
+                {
+                    for (int x = 0; x < width; ++x)
+                    {
+                        if (caughtDefects[x, y] == true)
+                        {
+                            currBit.SetPixel(x + width, y, Color.Black);
+                            currBit.SetPixel(x, y + height, Color.Black);
+                            currBit.SetPixel(x + width, y + height, Color.Black);
+
+                        }
+                    }
+                }
+
+
+            }
 
             for (int y = 0; y < height; ++y)
             {
@@ -351,15 +411,28 @@ namespace retouch
                             }
                         }
 
-                        for (int i = 0; i < 3; i++)
+                        if (nonDefPixAmount != 0)
                         {
-                            sumPix[i] = sumPix[i] / nonDefPixAmount; 
+                            for (int i = 0; i < 3; i++)
+                            {
+                                sumPix[i] = sumPix[i] / nonDefPixAmount;
+                            }
+                            currBit.SetPixel(x, y, Color.FromArgb(sumPix[0], sumPix[1], sumPix[2]));
                         }
-                        currBit.SetPixel(x, y, Color.FromArgb(sumPix[0], sumPix[1], sumPix[2]));
+                      
                     }
                 }
 
             }
+
+            if (waveletCount != 0 && twice != 0)
+            {
+                btnFindWrong.PerformClick();
+                twice--;
+
+                btnPerformRet.PerformClick();
+            }
+
             pictureBox1.Refresh();
         }
 
@@ -399,12 +472,12 @@ namespace retouch
             if (radioButton1px.Checked)
             {
                 size = 1;
-                defPen = new Pen(Color.Yellow, 1f);
+                defPen = new Pen(Color.White, 1f);
             }
             else
             {
                 size = 2;
-                defPen = new Pen(Color.Yellow, 2f);
+                defPen = new Pen(Color.White, 2f);
             }
         }
 
@@ -426,10 +499,10 @@ namespace retouch
             //переход в серое
             btnMakeGray.PerformClick();
             
+            currBit = WaveletAndRetouch.waveletFilter(currBit, currBit.Width / (waveletCount + 1), p);
+
             //переход на вейвлет:
-            isWavelet = true;
-            
-            currBit = WaveletAndRetouch.waveletFilter(currBit, p);
+            waveletCount++;
             pictureBox1.Image = (Image)currBit;
             pictureBox1.Refresh();
 
@@ -438,16 +511,23 @@ namespace retouch
         private void btnRevWavelet_Click(object sender, EventArgs e)
         {
             //переход на вейвлет:
-            if (isWavelet == false)
+            if (waveletCount == 0)
             {
                 MessageBox.Show("Check your actions!", "The Wavelet filter hasn't been used on the image!");
                 return;
             }
 
-            isWavelet = false;
-
-            currBit = WaveletAndRetouch.reverseWavelet(currBit, 1);
+            currBit = WaveletAndRetouch.reverseWavelet(currBit, currBit.Width, waveletCount);
+            
+            waveletCount--;
             pictureBox1.Image = (Image)currBit;
+
+            //доп.обработка:
+            btnFindWrong.PerformClick();
+            btnPerformRet.PerformClick();
+            btnFindWrong.PerformClick();
+            btnPerformRet.PerformClick();
+
             pictureBox1.Refresh();
 
         }

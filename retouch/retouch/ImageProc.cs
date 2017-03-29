@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace retouch
 {
-    struct toch
+    public struct toch
     {
         public int R;
         public int O;
@@ -106,14 +106,6 @@ namespace retouch
             H /= N;
 
             return Math.Abs(H);
-        }
-
-        //apply the adaptive binarization
-        public static void AdaptBinarizate(ref Bitmap img) { 
-            
-        
-        
-        
         }
 
         //основной алгоритм Хаффа (составление таблицы H):
