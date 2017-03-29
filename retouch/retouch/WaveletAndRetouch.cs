@@ -19,14 +19,28 @@ namespace retouch
             {
                 for (int x = 0, k = 0; x < size; x += 2, k++)
                 {
-                    byte color = (bmp.GetPixel(x, y)).R;
-                    byte color2 = (bmp.GetPixel(x + 1, y)).R;
-                    byte a = (byte)((color + color2) / 2);
-                    byte d = (byte)((color - color2) / 2);
-                    d = (byte)((d <= threshold) ? 0 : d);   /* Порог обнуления */
+                    byte[] color = new byte[3];
+                    byte[] color2 = new byte[3];
+                    byte[] a = new byte[3];
+                    byte[] d = new byte[3];
 
-                    res_bmp.SetPixel(k, y, Color.FromArgb(a, a, a));
-                    res_bmp.SetPixel(size / 2 + k, y, Color.FromArgb(d, d, d));
+                    color[0] = (bmp.GetPixel(x, y)).R;
+                    color2[0] = (bmp.GetPixel(x + 1, y)).R;
+                    color[1] = (bmp.GetPixel(x, y)).G;
+                    color2[1] = (bmp.GetPixel(x + 1, y)).G;
+                    color[2] = (bmp.GetPixel(x, y)).B;
+                    color2[2] = (bmp.GetPixel(x + 1, y)).B;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        a[i] = (byte)((color[i] + color2[i]) / 2);
+                        d[i] = (byte)((color[i] - color2[i]) / 2);
+                        d[i] = (byte)((d[i] <= threshold) ? 0 : d[i]);   /* Порог обнуления */
+
+                    }
+
+                    res_bmp.SetPixel(k, y, Color.FromArgb(a[0], a[1], a[2]));
+                    res_bmp.SetPixel(size / 2 + k, y, Color.FromArgb(d[0], d[1], d[2]));
 
                 }
             }
@@ -37,14 +51,28 @@ namespace retouch
             {
                 for (int x = 0; x < size; x++)
                 {
-                    byte color = (bmp.GetPixel(x, y)).R;
-                    byte color2 = (bmp.GetPixel(x, y + 1)).R;
-                    byte a = (byte)((color + color2) / 2);
-                    byte d = (byte)((color - color2) / 2);
-                    d = (byte)((d <= threshold) ? 0 : d);   /* Порог обнуления */
+                    byte[] color = new byte[3];
+                    byte[] color2 = new byte[3];
+                    byte[] a = new byte[3];
+                    byte[] d = new byte[3];
 
-                    res_bmp.SetPixel(x, k, Color.FromArgb(a, a, a));
-                    res_bmp.SetPixel(x, size / 2 + k, Color.FromArgb(d, d, d));
+                    color[0] = (bmp.GetPixel(x, y)).R;
+                    color2[0] = (bmp.GetPixel(x, y + 1)).R;
+                    color[1] = (bmp.GetPixel(x, y)).G;
+                    color2[1] = (bmp.GetPixel(x, y + 1)).G;
+                    color[2] = (bmp.GetPixel(x, y)).B;
+                    color2[2] = (bmp.GetPixel(x, y + 1)).B;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        a[i] = (byte)((color[i] + color2[i]) / 2);
+                        d[i] = (byte)((color[i] - color2[i]) / 2);
+                        d[i] = (byte)((d[i] <= threshold) ? 0 : d[i]);   /* Порог обнуления */
+
+                    }
+
+                    res_bmp.SetPixel(x, k, Color.FromArgb(a[0], a[1], a[2]));
+                    res_bmp.SetPixel(x, size / 2 + k, Color.FromArgb(d[0], d[1], d[2]));
 
                 }
             }
@@ -69,13 +97,26 @@ namespace retouch
             {
                 for (int x = 0; x < size; x++)
                 {
-                    byte a = (bmp.GetPixel(x, k)).R;
-                    byte d = (bmp.GetPixel(x, size / 2 + k)).R;
-                    byte y1 = (byte)(a + d);
-                    byte y2 = (byte)(a - d);
+                    byte[] a = new byte[3];
+                    byte[] d = new byte[3];
+                    byte[] y1 = new byte[3];
+                    byte[] y2 = new byte[3];
 
-                    res_bmp.SetPixel(x, y, Color.FromArgb(y1, y1, y1));
-                    res_bmp.SetPixel(x, y + 1, Color.FromArgb(y2, y2, y2));
+                    a[0] = (bmp.GetPixel(x, k)).R;
+                    d[0] = (bmp.GetPixel(x, size / 2 + k)).R;
+                    a[1] = (bmp.GetPixel(x, k)).G;
+                    d[1] = (bmp.GetPixel(x, size / 2 + k)).G;
+                    a[2] = (bmp.GetPixel(x, k)).B;
+                    d[2] = (bmp.GetPixel(x, size / 2 + k)).B;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        y1[i] = (byte)(a[i] + d[i]);
+                        y2[i] = (byte)(a[i] - d[i]);
+                    }
+
+                    res_bmp.SetPixel(x, y, Color.FromArgb(y1[0], y1[1], y1[2]));
+                    res_bmp.SetPixel(x, y + 1, Color.FromArgb(y2[0], y2[1], y2[2]));
 
                 }
             }
@@ -87,13 +128,26 @@ namespace retouch
             {
                 for (int x = 0, k = 0; x < size; x += 2, k++)
                 {
-                    byte a = (bmp.GetPixel(k, y)).R;
-                    byte d = (bmp.GetPixel(size / 2 + k, y)).R;
-                    byte x1 = (byte)(a + d);
-                    byte x2 = (byte)(a - d);
+                    byte[] a = new byte[3];
+                    byte[] d = new byte[3];
+                    byte[] x1 = new byte[3];
+                    byte[] x2 = new byte[3];
 
-                    res_bmp.SetPixel(x, y, Color.FromArgb(x1, x1, x1));
-                    res_bmp.SetPixel(x + 1, y, Color.FromArgb(x2, x2, x2));
+                    a[0] = (bmp.GetPixel(k, y)).R;
+                    d[0] = (bmp.GetPixel(size / 2 + k, y)).R;
+                    a[1] = (bmp.GetPixel(k, y)).G;
+                    d[1] = (bmp.GetPixel(size / 2 + k, y)).G;
+                    a[2] = (bmp.GetPixel(k, y)).B;
+                    d[2] = (bmp.GetPixel(size / 2 + k, y)).B;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        x1[i] = (byte)(a[i] + d[i]);
+                        x2[i] = (byte)(a[i] - d[i]);
+                    }
+
+                    res_bmp.SetPixel(x, y, Color.FromArgb(x1[0], x1[1], x1[2]));
+                    res_bmp.SetPixel(x + 1, y, Color.FromArgb(x2[0], x2[1], x2[2]));
 
                 }
             }

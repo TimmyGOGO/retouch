@@ -373,9 +373,9 @@ namespace retouch
                     {
                         if (caughtDefects[x, y] == true)
                         {
-                            currBit.SetPixel(x + width, y, Color.Black);
-                            currBit.SetPixel(x, y + height, Color.Black);
-                            currBit.SetPixel(x + width, y + height, Color.Black);
+                            currBit.SetPixel(x + width, y, Color.White);
+                            currBit.SetPixel(x, y + height, Color.White);
+                            currBit.SetPixel(x + width, y + height, Color.White);
 
                         }
                     }
@@ -497,7 +497,7 @@ namespace retouch
             }
 
             //переход в серое
-            btnMakeGray.PerformClick();
+            //btnMakeGray.PerformClick();
             
             currBit = WaveletAndRetouch.waveletFilter(currBit, currBit.Width / (waveletCount + 1), p);
 
